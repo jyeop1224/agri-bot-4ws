@@ -1,0 +1,358 @@
+<?xml version="1.0"?>
+<robot name="agri_bot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <material name="white"> <color rgba="1 1 1 1"/> </material>
+  <material name="blue">  <color rgba="0 0 0.8 1"/> </material>
+  <material name="black"> <color rgba="0 0 0 1"/> </material>
+  <material name="gray">  <color rgba="0.5 0.5 0.5 1"/> </material>
+
+  <link name="base_footprint"/>
+  <joint name="base_joint" type="fixed">
+    <parent link="base_footprint"/>
+    <child link="base_link"/>
+    <origin xyz="0 0 0.1" rpy="0 0 0"/>
+  </joint>
+
+  <link name="base_link">
+    <visual>
+      <geometry><box size="0.6 0.4 0.2"/></geometry>
+      <material name="white"/>
+    </visual>
+    <collision>
+      <geometry><box size="0.6 0.4 0.2"/></geometry>
+    </collision>
+    <inertial>
+      <mass value="20.0"/>
+      <inertia ixx="0.3" ixy="0" ixz="0" iyy="0.7" iyz="0" izz="0.7"/>
+    </inertial>
+  </link>
+
+  <link name="tank_link">
+    <visual>
+      <geometry><box size="0.3 0.3 0.15"/></geometry>
+      <material name="blue"/>
+    </visual>
+    <inertial>
+      <mass value="2.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+  </link>
+  <joint name="tank_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="tank_link"/>
+    <origin xyz="0 0 0.175" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================================ -->
+  <!-- 4WS 바퀴 매크로                  -->
+  <!-- ================================ -->
+  <xacro:macro name="wheel_4ws" params="prefix x y">
+    <link name="${prefix}_steering_link">
+      <visual>
+        <geometry><box size="0.05 0.05 0.05"/></geometry>
+        <material name="gray"/>
+      </visual>
+      <inertial>
+        <mass value="0.1"/>
+        <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_steering_joint" type="revolute">
+      <parent link="base_link"/>
+      <child link="${prefix}_steering_link"/>
+      <origin xyz="${x} ${y} -0.1" rpy="0 0 0"/>
+      <axis xyz="0 0 1"/>
+      <limit lower="-1.5707" upper="1.5707" effort="10.0" velocity="1.0"/>
+      <dynamics damping="0.01" friction="0.01"/>
+    </joint>
+
+    <link name="${prefix}_wheel">
+      <visual>
+        <origin rpy="1.5707 0 0" xyz="0 0 0"/>
+        <geometry><cylinder length="0.05" radius="0.1"/></geometry>
+        <material name="black"/>
+      </visual>
+      <collision>
+        <origin rpy="1.5707 0 0" xyz="0 0 0"/>
+        <geometry><cylinder length="0.05" radius="0.1"/></geometry>
+      </collision>
+      <inertial>
+        <mass value="1.0"/>
+        <inertia ixx="0.005" ixy="0" ixz="0" iyy="0.005" iyz="0" izz="0.005"/>
+      </inertial>
+    </link>
+
+    <joint name="${prefix}_wheel_joint" type="continuous">
+      <parent link="${prefix}_steering_link"/>
+      <child link="${prefix}_wheel"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <axis xyz="0 1 0"/>
+      <dynamics damping="0.01" friction="0.0"/>
+    </joint>
+
+    <gazebo reference="${prefix}_wheel">
+      <material>Gazebo/Black</material>
+      <mu1>2.0</mu1>
+      <mu2>2.0</mu2>
+      <kp>1e6</kp>
+      <kd>1.0</kd>
+    </gazebo>
+    <gazebo reference="${prefix}_steering_link">
+      <material>Gazebo/Grey</material>
+    </gazebo>
+  </xacro:macro>
+
+  <xacro:wheel_4ws prefix="front_left"  x=" 0.2" y=" 0.22"/>
+  <xacro:wheel_4ws prefix="front_right" x=" 0.2" y="-0.22"/>
+  <xacro:wheel_4ws prefix="rear_left"   x="-0.2" y=" 0.22"/>
+  <xacro:wheel_4ws prefix="rear_right"  x="-0.2" y="-0.22"/>
+
+  <!-- ================================ -->
+  <!-- LiDAR                            -->
+  <!-- ================================ -->
+  <link name="laser_frame">
+    <visual>
+      <geometry><cylinder length="0.05" radius="0.05"/></geometry>
+      <material name="black"/>
+    </visual>
+    <inertial>
+      <mass value="0.1"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="laser_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="laser_frame"/>
+    <origin xyz="0 0 0.15" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================================ -->
+  <!-- 전방 카메라                       -->
+  <!-- ================================ -->
+  <link name="camera_front_link">
+    <visual>
+      <geometry><box size="0.025 0.09 0.025"/></geometry>
+      <material name="black"/>
+    </visual>
+    <inertial>
+      <mass value="0.072"/>
+      <inertia ixx="0.001" ixy="0" ixz="0"
+               iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="camera_front_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_front_link"/>
+    <origin xyz="0.31 0 0.3" rpy="0 0.26 0"/>
+  </joint>
+
+  <!-- ================================ -->
+  <!-- 후방 카메라                       -->
+  <!-- ================================ -->
+  <link name="camera_rear_link">
+    <visual>
+      <geometry><box size="0.025 0.09 0.025"/></geometry>
+      <material name="black"/>
+    </visual>
+    <inertial>
+      <mass value="0.072"/>
+      <inertia ixx="0.001" ixy="0" ixz="0"
+               iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="camera_rear_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="camera_rear_link"/>
+    <origin xyz="-0.31 0 0.3" rpy="0 0.26 3.14159"/>
+  </joint>
+
+  <!-- ================================ -->
+  <!-- ros2_control 인터페이스          -->
+  <!-- ================================ -->
+  <ros2_control name="agri_bot_hardware" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    <joint name="front_left_steering_joint">
+      <command_interface name="position">
+        <param name="min">-1.5707</param>
+        <param name="max"> 1.5707</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="front_right_steering_joint">
+      <command_interface name="position">
+        <param name="min">-1.5707</param>
+        <param name="max"> 1.5707</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rear_left_steering_joint">
+      <command_interface name="position">
+        <param name="min">-1.5707</param>
+        <param name="max"> 1.5707</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rear_right_steering_joint">
+      <command_interface name="position">
+        <param name="min">-1.5707</param>
+        <param name="max"> 1.5707</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="front_left_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max"> 10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="front_right_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max"> 10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rear_left_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max"> 10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+    <joint name="rear_right_wheel_joint">
+      <command_interface name="velocity">
+        <param name="min">-10</param>
+        <param name="max"> 10</param>
+      </command_interface>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <!-- gazebo_ros2_control 플러그인 -->
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so"
+            name="gazebo_ros2_control">
+      <ros>
+        <namespace>/</namespace>
+      </ros>
+      <robotNamespace>/</robotNamespace>
+      <parameters>$(find agri_bot_description)/param/ros2_control.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+  <!-- LiDAR 플러그인 -->
+  <gazebo reference="laser_frame">
+    <material>Gazebo/Black</material>
+    <sensor name="laser" type="ray">
+      <pose>0 0 0 0 0 0</pose>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+      <update_rate>10</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>360</samples>
+            <resolution>1.0</resolution>
+            <min_angle>-3.14159</min_angle>
+            <max_angle>3.14159</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.12</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <plugin name="laserscan" filename="libgazebo_ros_ray_sensor.so">
+        <ros>
+          <remapping>~/out:=scan</remapping>
+        </ros>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <frame_name>laser_frame</frame_name>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- 전방 카메라 Gazebo depth 플러그인 -->
+  <gazebo reference="camera_front_link">
+    <sensor name="camera_front" type="depth">
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+      <update_rate>15</update_rate>
+      <camera>
+        <horizontal_fov>1.047</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>8.0</far>
+        </clip>
+      </camera>
+      <plugin name="camera_front_plugin"
+              filename="libgazebo_ros_camera.so">
+        <ros>
+          <remapping>image_raw:=/camera/front/color/image_raw</remapping>
+          <remapping>camera_info:=/camera/front/color/camera_info</remapping>
+          <remapping>depth/image_raw:=/camera/front/depth/image_raw</remapping>
+          <remapping>depth/camera_info:=/camera/front/depth/camera_info</remapping>
+          <remapping>points:=/camera/front/depth/color/points</remapping>
+        </ros>
+        <frame_name>camera_front_link</frame_name>
+        <min_depth>0.1</min_depth>
+        <max_depth>8.0</max_depth>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+  <!-- 후방 카메라 Gazebo depth 플러그인 -->
+  <gazebo reference="camera_rear_link">
+    <sensor name="camera_rear" type="depth">
+      <always_on>true</always_on>
+      <visualize>false</visualize>
+      <update_rate>15</update_rate>
+      <camera>
+        <horizontal_fov>1.047</horizontal_fov>
+        <image>
+          <width>640</width>
+          <height>480</height>
+          <format>R8G8B8</format>
+        </image>
+        <clip>
+          <near>0.1</near>
+          <far>8.0</far>
+        </clip>
+      </camera>
+      <plugin name="camera_rear_plugin"
+              filename="libgazebo_ros_camera.so">
+        <ros>
+          <remapping>image_raw:=/camera/rear/color/image_raw</remapping>
+          <remapping>camera_info:=/camera/rear/color/camera_info</remapping>
+          <remapping>depth/image_raw:=/camera/rear/depth/image_raw</remapping>
+          <remapping>depth/camera_info:=/camera/rear/depth/camera_info</remapping>
+          <remapping>points:=/camera/rear/depth/color/points</remapping>
+        </ros>
+        <frame_name>camera_rear_link</frame_name>
+        <min_depth>0.1</min_depth>
+        <max_depth>8.0</max_depth>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>

@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+  <world name="greenhouse_2bed">
+    <include><uri>model://sun</uri></include>
+    <physics type="ode">
+      <real_time_update_rate>1000.0</real_time_update_rate>
+      <max_step_size>0.001</max_step_size>
+    </physics>
+
+    <!-- 바닥 -->
+    <model name="floor"><static>true</static><link name="link">
+      <collision name="col"><geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry></collision>
+      <visual name="vis"><geometry><plane><normal>0 0 1</normal><size>20 20</size></plane></geometry>
+        <material><ambient>0.35 0.22 0.08 1</ambient><diffuse>0.35 0.22 0.08 1</diffuse></material>
+      </visual></link></model>
+
+    <!-- 외벽 -->
+    <model name="wall_front"><static>true</static>
+      <pose>-0.05 1.00 0.5 0 0 0</pose>
+      <link name="link"><collision name="col"><geometry><box><size>0.1 2.20 1.0</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>0.1 2.20 1.0</size></box></geometry>
+        <material><ambient>0.9 0.9 0.9 1</ambient></material></visual></link></model>
+
+    <model name="wall_back"><static>true</static>
+      <pose>8.05 1.00 0.5 0 0 0</pose>
+      <link name="link"><collision name="col"><geometry><box><size>0.1 2.20 1.0</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>0.1 2.20 1.0</size></box></geometry>
+        <material><ambient>0.9 0.9 0.9 1</ambient></material></visual></link></model>
+
+    <model name="wall_left"><static>true</static>
+      <pose>4.0 0.15 0.5 0 0 0</pose>
+      <link name="link"><collision name="col"><geometry><box><size>8.2 0.1 1.0</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>8.2 0.1 1.0</size></box></geometry>
+        <material><ambient>0.9 0.9 0.9 1</ambient></material></visual></link></model>
+
+    <model name="wall_right"><static>true</static>
+      <pose>4.0 2.05 0.5 0 0 0</pose>
+      <link name="link"><collision name="col"><geometry><box><size>8.2 0.1 1.0</size></box></geometry></collision>
+      <visual name="vis"><geometry><box><size>8.2 0.1 1.0</size></box></geometry>
+        <material><ambient>0.9 0.9 0.9 1</ambient></material></visual></link></model>
+
+    <!--
+      베드 수: 2
+      베드 y 위치: ['0.2', '1.8']
+      통로 중심 y: ['1.00']
+      spawn: x=0, y=1.00 (통로1 중앙)
+    -->
+    <!-- ── 베드 1 (y=0.2) ── -->
+    <model name="bed1_top"><static>true</static><pose>4.0 0.2 0.82 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>5.0 0.4 0.05</size></box></geometry></collision><visual name="vis"><geometry><box><size>5.0 0.4 0.05</size></box></geometry><material><ambient>0.15 0.5 0.15 1</ambient><diffuse>0.15 0.5 0.15 1</diffuse></material></visual></link></model>
+    <model name="bed1_col_1"><static>true</static><pose>1.5 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_2"><static>true</static><pose>2.0 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_3"><static>true</static><pose>2.5 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_4"><static>true</static><pose>3.0 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_5"><static>true</static><pose>3.5 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_6"><static>true</static><pose>4.0 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_7"><static>true</static><pose>4.5 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_8"><static>true</static><pose>5.0 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_9"><static>true</static><pose>5.5 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_10"><static>true</static><pose>6.0 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed1_col_11"><static>true</static><pose>6.5 0.05 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <!-- ── 베드 2 (y=1.8) ── -->
+    <model name="bed2_top"><static>true</static><pose>4.0 1.8 0.82 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>5.0 0.4 0.05</size></box></geometry></collision><visual name="vis"><geometry><box><size>5.0 0.4 0.05</size></box></geometry><material><ambient>0.15 0.5 0.15 1</ambient><diffuse>0.15 0.5 0.15 1</diffuse></material></visual></link></model>
+    <model name="bed2_col_1"><static>true</static><pose>1.5 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_2"><static>true</static><pose>2.0 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_3"><static>true</static><pose>2.5 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_4"><static>true</static><pose>3.0 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_5"><static>true</static><pose>3.5 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_6"><static>true</static><pose>4.0 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_7"><static>true</static><pose>4.5 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_8"><static>true</static><pose>5.0 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_9"><static>true</static><pose>5.5 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_10"><static>true</static><pose>6.0 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+    <model name="bed2_col_11"><static>true</static><pose>6.5 1.65 0.4 0 0 0</pose><link name="link"><collision name="col"><geometry><box><size>0.04 0.04 0.8</size></box></geometry></collision><visual name="vis"><geometry><box><size>0.04 0.04 0.8</size></box></geometry><material><ambient>0.6 0.6 0.6 1</ambient></material></visual></link></model>
+  </world>
+</sdf>
