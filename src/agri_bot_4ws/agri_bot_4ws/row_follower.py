@@ -483,10 +483,13 @@ class RowFollower(Node):
                 self.pid_integral = 0.0
 
                 # Waypoint 저장
-                self.visited_corridor_ys.append(self.odom_y)
+                lateral_error = self.row_state[0]
+                corridor_center_y = self.odom_y - lateral_error
+                self.visited_corridor_ys.append(corridor_center_y)
                 self.get_logger().info(
                     f'📌 Waypoint 저장 | 통로{len(self.visited_corridor_ys)} '
-                    f'y={self.odom_y:.3f}m | '
+                    f'y={corridor_center_y:.3f}m '
+                    f'(odom={self.odom_y:.3f} lat={lateral_error:.3f}) | '
                     f'전체={[f"{v:.2f}" for v in self.visited_corridor_ys]}')
 
                 self.state = State.FOLLOWING
