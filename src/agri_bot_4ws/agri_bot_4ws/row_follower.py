@@ -398,7 +398,10 @@ class RowFollower(Node):
                         throttle_duration_sec=0.3)
         else:
             self.fwd_no_pillar_count = 0
-            self.safe_fwd_start_x = None
+            # safe_fwd_start_x가 이미 설정된 경우 유지
+            # (side=2 노이즈가 와도 기준점 리셋 안 함)
+            if self.safe_fwd_start_x is None:
+                pass
             cmd = Twist()
             cmd.linear.x = self.linear_vel
             self.cmd_pub.publish(cmd)
@@ -470,7 +473,15 @@ class RowFollower(Node):
         h = heading_error
         if abs(h) > math.pi / 2:
             h -= math.copysign(math.pi, h)
-
+            
+        # 30도 이상은 RANSAC 노이즈로 판단
+        if abs(h) > math.radians(30.0):
+            self.align_count = 0
+            self.stop_robot()
+            self.get_logger().warn(
+                f'⚠️ heading 노이즈 무시: {math.degrees(h):.1f}°',
+                throttle_duration_sec=0.3)
+            return
         if abs(h) < self.ALIGN_THRESHOLD:
             self.align_count += 1
             self.get_logger().info(

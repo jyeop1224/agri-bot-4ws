@@ -385,6 +385,14 @@ class RowDetector(Node):
         right_centers = [np.mean(c, axis=0) for c in right_pillars
                          if len(c) >= self.min_pts]
         all_centers = left_centers + right_centers
+        
+        # 전방 기둥만 사용 (측면 기둥 노이즈 제거)
+        # x > 0.3m: 로봇 전방 0.3m 이상 앞에 있는 기둥만
+        all_centers = [
+            c for c in left_centers + right_centers
+            if abs(c[0]) > 0.3
+        ]
+
         if len(all_centers) < 2:
             return 0.0, None
         pts = np.array(all_centers)
